@@ -1,0 +1,18 @@
+function sendData()             
+            conn1=net.createConnection(net.TCP, 0)
+            conn1:on("connection",
+                function(conn1,payload)
+                print("Sending Data to PubNub")
+                conn1:send('GET /publish/pub-c-11527e8a-5008-4b84-82e9-c7f224ccc3d8/sub-c-f224d246-36bb-11e6-ac64-0619f8945a4f/0/RIngHackMania/0/{"eon":{"pot":'..adc.read(0)..'}} \r\n')
+                conn1:send('Host: pubsub.pubnub.com//\r\n') 
+                conn1:send('Accept: */*\r\n') 
+                conn1:send('User-Agent: Mozilla/4.0 (compatible; esp8266 Lua; Windows NT 5.1)\r\n')
+                conn1:send('\r\n')
+                end)
+            conn1:on("receive",function(conn1,payload) print(payload) end)
+            conn1:on("disconnection",function(conn1,payload) conn1:close() print ("disconnected")end)
+            conn1:connect(80,'54.241.191.241') 
+            gpio.write(1,gpio.HIGH)
+            print(adc.read(0))
+end
+tmr.alarm(1,2000,1,function() sendData() end)
