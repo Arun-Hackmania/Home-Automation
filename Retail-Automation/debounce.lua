@@ -2,7 +2,7 @@ local button_1 = 6
 local debounceDelay
 local debounceAlarmId
 gpio.mode(button_1, gpio.INT, gpio.PULLUP)
-
+ 
 
 function doorLocked()
     -- don't react to any interupts from now on and wait 50ms until the interrupt for the up event is enabled

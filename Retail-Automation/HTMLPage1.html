@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>-->
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.2.min.js"></script>
+</head>
+<body style="text-align: center;">
+    <div style="width: 40%; padding-top: 50px;">
+        <table style="width: 80%">
+            <tr style="height: 5px">
+                <td colspan="2"></td>
+            </tr>
+            <tr id="tr_btn_id_1">
+                <td style="text-align: center">
+                    <label>btn_id_1</label></td>
+                <td style="text-align: left;">
+                    <button id="btn_id_1" class="btn btn-danger btn-sm">Cancel</button>
+                </td>
+            </tr>
+            <tr style="height: 5px">
+                <td colspan="2"></td>
+            </tr>
+            <tr id="tr_btn_id_2">
+                <td style="text-align: center">
+                    <label>btn_id_2</label>
+                </td>
+                <td style="text-align: left;">
+                    <button id="btn_id_2" class="btn btn-danger btn-sm">Cancel</button>
+                </td>
+            </tr>
+			<tr style="height: 5px">
+                <td colspan="2"></td>
+            </tr>
+            <tr style="height: 5px">
+                <td colspan="2"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+	    var strJSON = [];
+        doWork();
+    });
+
+    function doWork() {
+        Read();
+        var repeater = setTimeout(doWork, 3000);
+    }
+
+    function Read() {
+        //jQuery.get('C:\Users\Sabrina.John\Documents\Visual Studio 2012\Projects\Test_Moxi\Test_Moxi\JSON.txt', function (data) {
+        //    strJSON = data;
+        //}, 'text');
+        $.getJSON("http://pubsub.pubnub.com/history/sub-c-f224d246-36bb-11e6-ac64-0619f8945a4f/ESPDash_Button/0/1",
+                    function (data, err) {
+                        if (err != null && err != "success") {
+                            alert("Error occured: " + err);
+                        }
+                        else {
+                            strJSON = data;
+                            HideRows(strJSON[0].eon);
+                        }
+                    });
+        //  return { "eon": { "btn_id_1": 1, "btn_id_2": 0, "btn_id_3": 1 } };
+    }
+
+    function HideRows(json) {
+        jQuery.each(json, function (id, val) {
+            if (!val) {
+                $('#tr_' + id).hide();
+            }
+            else {
+                $('#tr_' + id).show();
+            }
+        });
+
+    }
+
+    $('.btn').click(function () {
+        var currentId = (this).id;
+        var json = {"eon":{}};
+        $('.btn').each(function () {
+            var id = (this).id;
+            if ($('#tr_' + id).is(':visible')) {
+                if (currentId == id) {
+                    json.eon[id] = 0;
+                }
+                else {
+                    json.eon[id] = 1;
+                }
+            }
+            else {
+                json.eon[id] = 0;
+            }
+        });
+
+        $.ajax({
+            url: "http://pubsub.pubnub.com/publish/pub-c-11527e8a-5008-4b84-82e9-c7f224ccc3d8/sub-c-f224d246-36bb-11e6-ac64-0619f8945a4f/0/ESPDash_Button/0/"+JSON.stringify(json),
+            data:{JSON: json},
+            success: function () {
+               //alert('Success');
+            }
+        });
+    });
+
+</script>
