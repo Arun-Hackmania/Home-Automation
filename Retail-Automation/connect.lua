@@ -7,5 +7,5 @@ if wifi.sta.getip()== nil then print("WiFi not connected")
 else tmr.stop(1) tmr.stop(6) gpio.write(4,gpio.HIGH) print("Connection done, IP is "..wifi.sta.getip())
 end end)
 
-dofile("debounce.lua")
+dofile("One_btn.lua")
 

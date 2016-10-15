@@ -21,7 +21,7 @@ function doorUnlocked()
     tmr.alarm(1, 10, tmr.ALARM_SINGLE, function()
         gpio.trig(button_1, "down", doorLocked)
     end)
-    --print("Door Unlocked")
+    print("Door Unlocked")
 end
 
-gpio.trig(button_1, "down", doorLocked))
+gpio.trig(button_1, "down", doorLocked)
